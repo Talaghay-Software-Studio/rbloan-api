@@ -2,16 +2,29 @@ const User = require("../../models/user");
 
 const userController = {
   createUser: (req, res) => {
-    const { username, password, salt, loginType, firstName, lastName, email } = req.body;
+    const { username, password, salt, loginType, firstName, lastName, email } =
+      req.body;
 
-    const newUser = new User(null, username, password, salt, loginType, firstName, lastName, email);
+    const newUser = new User(
+      null,
+      username,
+      password,
+      salt,
+      loginType,
+      firstName,
+      lastName,
+      email
+    );
 
     User.createUser(newUser)
       .then((userId) => {
-        res.status(201).json({ id: userId, message: 'User created successfully' });
+        res
+          .status(201)
+          .json({ id: userId, message: "User created successfully" });
       })
       .catch((err) => {
-        res.status(500).json({ error: 'Failed to create user' });
+        console.log(err); // Add this line to print the error.
+        res.status(500).json({ error: "Failed to create user" });
       });
   },
 
@@ -21,7 +34,7 @@ const userController = {
         res.json(users);
       })
       .catch((err) => {
-        res.status(500).json({ error: 'Failed to retrieve users' });
+        res.status(500).json({ error: "Failed to retrieve users" });
       });
   },
 
@@ -33,30 +46,40 @@ const userController = {
         if (user) {
           res.json(user);
         } else {
-          res.status(404).json({ error: 'User not found' });
+          res.status(404).json({ error: "User not found" });
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: 'Failed to retrieve user' });
+        res.status(500).json({ error: "Failed to retrieve user" });
       });
   },
 
   updateUser: (req, res) => {
     const userId = parseInt(req.params.id);
-    const { username, password, salt, loginType, firstName, lastName, email } = req.body;
+    const { username, password, salt, loginType, firstName, lastName, email } =
+      req.body;
 
-    const updatedUser = new User(userId, username, password, salt, loginType, firstName, lastName, email);
+    const updatedUser = new User(
+      userId,
+      username,
+      password,
+      salt,
+      loginType,
+      firstName,
+      lastName,
+      email
+    );
 
     User.updateUser(updatedUser)
       .then((success) => {
         if (success) {
-          res.json({ message: 'User updated successfully' });
+          res.json({ message: "User updated successfully" });
         } else {
-          res.status(404).json({ error: 'User not found' });
+          res.status(404).json({ error: "User not found" });
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: 'Failed to update user' });
+        res.status(500).json({ error: "Failed to update user" });
       });
   },
 
@@ -66,15 +89,15 @@ const userController = {
     User.deleteUser(userId)
       .then((success) => {
         if (success) {
-          res.json({ message: 'User deleted successfully' });
+          res.json({ message: "User deleted successfully" });
         } else {
-          res.status(404).json({ error: 'User not found' });
+          res.status(404).json({ error: "User not found" });
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: 'Failed to delete user' });
+        res.status(500).json({ error: "Failed to delete user" });
       });
-  }
+  },
 };
 
 module.exports = userController;

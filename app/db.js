@@ -1,23 +1,28 @@
-const mysql = require("mysql");
+const mysqlx = require('@mysql/xdevapi');
 const dbConfig = require("../app/config/db.config");
 
-const connection = mysql.createConnection({
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB,
-  authPlugin: 'mysql_native_password'
-});
+let session;
 
-
-// Test the database connection
-connection.connect((err) => {
-  if (err) {
-    console.error('Database connection failed:', err);
-    return;
+const getConnection = async () => {
+  if (session) {
+    return session;
   }
-  console.log('Database connection successful!');
-  connection.end(); // Close the connection after testing
-});
 
-module.exports = connection;
+  try {
+    session = await mysqlx.getSession({
+      user: dbConfig.USER,
+      password: dbConfig.PASSWORD,
+      host: dbConfig.HOST,
+      port: dbConfig.PORT,
+      schema: dbConfig.DB
+    });
+
+    console.log("Connected to MySQL server successfully!");
+
+    return session;
+  } catch (error) {
+    console.error("Failed to connect to MySQL server:", error.message);
+  }
+};
+
+module.exports = { getConnection };

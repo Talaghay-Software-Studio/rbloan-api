@@ -56,46 +56,46 @@ const branchController = {
 
   updateBranch: (req, res) => {
     const branchId = parseInt(req.query.id);
-    const { username, password, salt, loginType, firstName, lastName, email } =
+    const { name, address_line1, address_line2, city, province, postal_code, country } =
       req.body;
 
     const updatedBranch = new Branch(
       branchId,
-      username,
-      password,
-      salt,
-      loginType,
-      firstName,
-      lastName,
-      email
+      name,
+      address_line1,
+      address_line2,
+      city,
+      province,
+      postal_code,
+      country
     );
 
-    Branch.updateUser(updatedBranch)
+    Branch.updateBranch(updatedBranch)
       .then((success) => {
         if (success) {
-          res.json({ message: "User updated successfully" });
+          res.json({ message: "Branch updated successfully" });
         } else {
-          res.status(404).json({ error: "User not found" });
+          res.status(404).json({ error: "Branch not found" });
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: "Failed to update user" });
+        res.status(500).json({ error: "Failed to update branch" });
       });
   },
 
   deleteBranch: (req, res) => {
-    const userId = parseInt(req.query.id);
+    const branchId = parseInt(req.query.id);
 
     Branch.deleteBranch(branchId)
       .then((success) => {
         if (success) {
-          res.json({ message: "User deleted successfully" });
+          res.json({ message: "Branch deleted successfully" });
         } else {
-          res.status(404).json({ error: "User not found" });
+          res.status(404).json({ error: "Branch not found" });
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: "Failed to delete user" });
+        res.status(500).json({ error: "Failed to delete branch" });
       });
   },
 };

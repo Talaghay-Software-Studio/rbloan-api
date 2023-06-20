@@ -47,7 +47,11 @@ class Client {
       const sqlQuery = `
         SELECT c.id, c.first_name, c.middle_name, c.last_name, ca.province, ca.city
         FROM client c
-        LEFT JOIN client_address ca ON c.id = ca.client_id
+        LEFT JOIN (
+          SELECT client_id, province, city
+          FROM client_address
+          WHERE address_type = 'permanent'
+        ) ca ON c.id = ca.client_id
       `;
       const result = await session.sql(sqlQuery).execute();
   
@@ -67,6 +71,7 @@ class Client {
       throw new Error("Failed to retrieve clients");
     }
   }
+  
   
   
   static async getClientById(clientId) {

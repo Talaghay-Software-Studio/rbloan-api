@@ -39,8 +39,8 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    const userId = parseInt(req.params.id);
-
+    const userId = parseInt(req.query.id);
+  
     User.getUserById(userId)
       .then((user) => {
         if (user) {
@@ -55,7 +55,7 @@ const userController = {
   },
 
   updateUser: (req, res) => {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.query.id);
     const { username, password, salt, loginType, firstName, lastName, email } =
       req.body;
 
@@ -84,7 +84,7 @@ const userController = {
   },
 
   deleteUser: (req, res) => {
-    const userId = parseInt(req.params.id);
+    const userId = parseInt(req.query.id);
 
     User.deleteUser(userId)
       .then((success) => {

@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/v1/userController');
+const branchController = require('../../controllers/v1/branchController');
 
-router.post('/', userController.createUser);
-router.get('/', userController.getAllUsers);
-router.get('/:id', userController.getUser);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', userController.deleteUser);
+router.post('/', branchController.createBranch);
+router.get('/', branchController.getAllBranch);
+router.get('/search/', branchController.getBranch);
+router.put('/update/', branchController.updateBranch);
+router.delete('/delete/', branchController.deleteBranch);
 
 module.exports = router;

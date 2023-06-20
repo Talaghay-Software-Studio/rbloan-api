@@ -49,6 +49,59 @@ class Branch {
 
     return result.fetchAll();
   }
+
+  static async getBranchById(branchId) {
+    const session = await getConnection();
+
+    if (!session) {
+      throw new Error("Failed to establish a database session");
+    }
+
+    const sqlQuery = `SELECT * FROM branch WHERE id = ?`;
+    const result = await session.sql(sqlQuery).bind(branchId).execute();
+
+    const branches = result.fetchAll();
+    return branches.length ? branches[0] : null;
+  }
+
+  static async updateBranch(branch) {
+    const session = await getConnection();
+
+    if (!session) {
+      throw new Error("Failed to establish a database session");
+    }
+
+    const sqlQuery = `UPDATE branch SET name = ?, address_line1 = ?, address_line2 = ?, city = ?, province = ?, postal_code = ?, country = ? WHERE id = ?`;
+    const result = await session
+      .sql(sqlQuery)
+      .bind(
+        branch.name,
+        branch.address_line1,
+        branch.address_line2,
+        branch.city,
+        branch.province,
+        branch.postal_code,
+        branch.country,
+        branch.id
+      )
+      .execute();
+
+    return result.getAffectedItemsCount() > 0;
+  }
+
+  static async deleteBranch(branchId) {
+    const session = await getConnection();
+  
+    if (!session) {
+      throw new Error("Failed to establish a database session");
+    }
+  
+    const sqlQuery = `DELETE FROM branch WHERE id = ?`;
+    const result = await session.sql(sqlQuery).bind(branchId).execute();
+  
+    await session.close();
+    return result.getAffectedItemsCount() > 0;
+    }
 }
 
 

@@ -23,7 +23,7 @@ const clientBusinessController = {
         .then((clientBusinessId) => {
           res
             .status(201)
-            .json({ id: clientBusinessId, message: "Client business address created successfully" });
+            .json({ id: clientBusinessId, message: "Client business created successfully" });
         })
         .catch((err) => {
           console.log(err); // Add this line to print the error.

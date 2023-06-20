@@ -26,6 +26,7 @@ const branchRoutes = require("./app/routes/v1/branchRoutes");
 const clientRoutes = require("./app/routes/v1/clientRoutes");
 const clientAddressRoutes = require("./app/routes/v1/clientAddressRoutes");
 const clientBusinessRoutes = require("./app/routes/v1/clientBusinessRoutes");
+const clientCollateralRoutes = require("./app/routes/v1/clientCollateralRoutes");
 
 
 app.use("/api/v1/users", userRoutes);
@@ -33,6 +34,7 @@ app.use("/api/v1/branch", branchRoutes);
 app.use("/api/v1/client", clientRoutes);
 app.use("/api/v1/client/address", clientAddressRoutes);
 app.use("/api/v1/client/business", clientBusinessRoutes);
+app.use("/api/v1/client/collateral", clientCollateralRoutes);
 
 
 // set port, listen for requests

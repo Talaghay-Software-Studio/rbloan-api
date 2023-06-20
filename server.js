@@ -28,6 +28,7 @@ const clientAddressRoutes = require("./app/routes/v1/clientAddressRoutes");
 const clientBusinessRoutes = require("./app/routes/v1/clientBusinessRoutes");
 const clientCollateralRoutes = require("./app/routes/v1/clientCollateralRoutes");
 const clientDependentsRoutes = require("./app/routes/v1/clientDependentsRoutes");
+const clientEmploymentRoutes = require("./app/routes/v1/clientEmploymentRoutes");
 
 
 app.use("/api/v1/users", userRoutes);
@@ -37,6 +38,7 @@ app.use("/api/v1/client/address", clientAddressRoutes);
 app.use("/api/v1/client/business", clientBusinessRoutes);
 app.use("/api/v1/client/collateral", clientCollateralRoutes);
 app.use("/api/v1/client/dependents", clientDependentsRoutes);
+app.use("/api/v1/client/employment", clientEmploymentRoutes);
 
 
 // set port, listen for requests

@@ -1,11 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const userController = require('../controllers/v1/userController');
+const clientSpouseController = require('../../controllers/v1/clientSpouseController');
 
-router.post('/', userController.createUser);
-router.get('/', userController.getAllUsers);
-router.get('/:id', userController.getUser);
-router.put('/:id', userController.updateUser);
-router.delete('/:id', userController.deleteUser);
+router.post("/", clientSpouseController.createClientSpouse);
+router.put('/update/', clientSpouseController.updateClientSpouse);
+router.delete('/delete/', clientSpouseController.deleteClientSpouse);
 
 module.exports = router;

@@ -30,6 +30,7 @@ const clientCollateralRoutes = require("./app/routes/v1/clientCollateralRoutes")
 const clientDependentsRoutes = require("./app/routes/v1/clientDependentsRoutes");
 const clientEmploymentRoutes = require("./app/routes/v1/clientEmploymentRoutes");
 const clientReferenceRoutes = require("./app/routes/v1/clientReferenceRoutes");
+const clientSpouseRoutes = require("./app/routes/v1/clientSpouseRoutes");
 
 
 app.use("/api/v1/users", userRoutes);
@@ -41,6 +42,7 @@ app.use("/api/v1/client/collateral", clientCollateralRoutes);
 app.use("/api/v1/client/dependents", clientDependentsRoutes);
 app.use("/api/v1/client/employment", clientEmploymentRoutes);
 app.use("/api/v1/client/reference", clientReferenceRoutes);
+app.use("/api/v1/client/spouse", clientSpouseRoutes);
 
 
 

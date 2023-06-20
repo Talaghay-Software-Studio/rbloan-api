@@ -39,18 +39,18 @@ const branchController = {
   },
 
   getBranch: (req, res) => {
-    const userId = parseInt(req.query.id);
+    const branchId = parseInt(req.query.id);
   
-    Branch.getBranchById(userId)
-      .then((user) => {
-        if (user) {
-          res.json(user);
+    Branch.getBranchById(branchId)
+      .then((branch) => {
+        if (branch) {
+          res.json(branch);
         } else {
-          res.status(404).json({ error: "User not found" });
+          res.status(404).json({ error: "Branch not found" });
         }
       })
       .catch((err) => {
-        res.status(500).json({ error: "Failed to retrieve user" });
+        res.status(500).json({ error: "Failed to retrieve branch" });
       });
   },
 

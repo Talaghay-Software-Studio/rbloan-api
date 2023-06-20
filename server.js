@@ -23,10 +23,12 @@ app.get("/", (req, res) => {
 // Import and use the userRoutes
 const userRoutes = require("./app/routes/v1/userRoutes");
 const branchRoutes = require("./app/routes/v1/branchRoutes");
+const clientRoutes = require("./app/routes/v1/clientRoutes");
 
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/branch", branchRoutes);
+app.use("/api/v1/client", clientRoutes);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

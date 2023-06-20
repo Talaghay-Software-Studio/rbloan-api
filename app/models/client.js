@@ -36,32 +36,118 @@ class Client {
   }
 
   static async getAllClient() {
-    const session = await getConnection();
-
-    if (!session) {
-      throw new Error("Failed to establish a database session");
+    try {
+      const session = await getConnection();
+  
+      if (!session) {
+        console.log("Failed to establish a database session");
+        throw new Error("Failed to establish a database session");
+      }
+  
+      const sqlQuery = `
+        SELECT c.id, c.first_name, c.middle_name, c.last_name, ca.province, ca.city
+        FROM client c
+        LEFT JOIN client_address ca ON c.id = ca.client_id
+      `;
+      const result = await session.sql(sqlQuery).execute();
+  
+      const clients = result.fetchAll();
+      const transformedClients = clients.map((client) => ({
+        client_id: client[0],
+        full_name: `${client[1]} ${client[2]} ${client[3]}`,
+        address: `${client[5]} ${client[4]}`,
+        total_loan: 200000.00,
+        remaining_balance: 300000.00,
+        is_delinquent: "No",
+      }));
+  
+      return transformedClients;
+    } catch (error) {
+      console.log("Failed to retrieve clients:", error);
+      throw new Error("Failed to retrieve clients");
     }
-
-    const sqlQuery = `SELECT * FROM client`;
-    const result = await session.sql(sqlQuery).execute();
-
-    const clients = result.fetchAll();
-    return clients;
   }
-
+  
+  
   static async getClientById(clientId) {
-    const session = await getConnection();
-
-    if (!session) {
-      throw new Error("Failed to establish a database session");
+    try {
+      const session = await getConnection();
+  
+      if (!session) {
+        console.log("Failed to establish a database session");
+        throw new Error("Failed to establish a database session");
+      }
+  
+      const sqlQuery = `
+        SELECT 
+          c.id AS client_id,
+          c.first_name,
+          c.middle_name,
+          c.last_name,
+          c.date_of_birth,
+          c.sex,
+          c.contact_number,
+          c.created_at,
+          c.modified_at,
+          ca.id,
+          ca.address_type,
+          ca.address_line1,
+          ca.address_line2,
+          ca.city,
+          ca.province,
+          ca.postal_code,
+          ca.country,
+          ca.created_at AS address_created_at,
+          ca.modified_at AS address_modified_at
+        FROM 
+          client c
+        LEFT JOIN 
+          client_address ca ON c.id = ca.client_id
+        WHERE 
+          c.id = ?
+      `;
+      const result = await session.sql(sqlQuery).bind(clientId).execute();
+  
+      const clientData = result.fetchAll();
+      if (clientData.length) {
+        const client = clientData[0];
+        const transformedClient = {
+          client_id: client[0],
+          first_name: client[1],
+          middle_name: client[2],
+          last_name: client[3],
+          birth_date: client[4],
+          sex: client[5],
+          contact_number: client[6],
+          created_at: new Date(client[7]).toLocaleString(),
+          modified_at: new Date(client[8]).toLocaleString(),
+          address: clientData.map((address) => ({
+            address_id: address[9],
+            address_type: address[10],
+            address_line1: address[11],
+            address_line2: address[12],
+            city: address[13],
+            province: address[14],
+            postal_code: address[15],
+            country: address[16],
+            created_at: new Date(address[17]).toLocaleString(),
+            modified_at: new Date(address[18]).toLocaleString(),
+          })),
+        };
+        return transformedClient;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.log("Failed to retrieve client:", error);
+      throw new Error("Failed to retrieve client");
     }
-
-    const sqlQuery = `SELECT * FROM client WHERE id = ?`;
-    const result = await session.sql(sqlQuery).bind(clientId).execute();
-
-    const clients = result.fetchAll();
-    return clients.length ? clients[0] : null;
   }
+  
+  
+
+  
+  
 
   static async updateClient(client) {
     const session = await getConnection();

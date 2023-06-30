@@ -7,5 +7,6 @@ router.get('/', clientController.getAllClient);
 router.get('/search/', clientController.getClient);
 router.put('/update/', clientController.updateClient);
 router.delete('/delete/', clientController.deleteClient);
+router.get('/newsearch/', clientController.getClientByNameOrAddress);
 
 module.exports = router;

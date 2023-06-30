@@ -150,10 +150,6 @@ class Client {
   }
   
   
-
-  
-  
-
   static async updateClient(client) {
     const session = await getConnection();
 
@@ -190,6 +186,64 @@ class Client {
 
     return result.getAffectedItemsCount() > 0;
   }
+
+  static async getClientsByQuery(query, searchby) {
+    try {
+      const session = await getConnection();
+  
+      if (!session) {
+        console.log("Failed to establish a database session");
+        throw new Error("Failed to establish a database session");
+      }
+  
+      let sqlQuery = `
+        SELECT *
+        FROM v_client_search
+      `;
+      let bindParams = [];
+  
+      if (searchby === "client") {
+        sqlQuery += `
+          WHERE full_name LIKE ?
+        `;
+        bindParams.push("%" + query + "%");
+      } else if (searchby === "address") {
+        sqlQuery += `
+          WHERE full_address LIKE ?
+        `;
+        bindParams.push("%" + query + "%");
+      } else if (searchby === "area") {
+        sqlQuery += `
+          WHERE client_area_name LIKE ?
+        `;
+        bindParams.push("%" + query + "%");
+      } else if (searchby === "collector") {
+        sqlQuery += `
+          WHERE client_collector_full_name LIKE ?
+        `;
+        bindParams.push("%" + query + "%");
+      }
+  
+      const result = await session.sql(sqlQuery).bind(...bindParams).execute();
+  
+      const clientData = result.fetchAll();
+      if (clientData.length) {
+        const clients = clientData.map((client) => ({
+          full_name: client[1],
+          full_address: client[2],
+          area_name: client[3],
+          collector_name: client[4],
+        }));
+        return clients;
+      } else {
+        return [];
+      }
+    } catch (error) {
+      console.log("Failed to retrieve clients:", error);
+      throw new Error("Failed to retrieve clients");
+    }
+  }
+  
 
 }
 

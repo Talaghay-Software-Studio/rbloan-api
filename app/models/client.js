@@ -1,7 +1,16 @@
 const { getConnection } = require("../db");
 
 class Client {
-  constructor(id, first_name, middle_name, last_name, date_of_birth, sex, contact_number) {
+  constructor(
+    id,
+    first_name,
+    middle_name,
+    last_name,
+    date_of_birth,
+    sex,
+    contact_number,
+    area_id
+  ) {
     this.id = id;
     this.first_name = first_name;
     this.middle_name = middle_name;
@@ -9,6 +18,7 @@ class Client {
     this.date_of_birth = date_of_birth;
     this.sex = sex;
     this.contact_number = contact_number;
+    this.area_id = area_id;
   }
 
   static async createClient(client) {
@@ -18,8 +28,8 @@ class Client {
       throw new Error("Failed to establish a database session");
     }
 
-    const sqlQuery = `INSERT INTO client (first_name, middle_name, last_name, date_of_birth, sex, contact_number)
-                      VALUES (?, ?, ?, ?, ?, ?)`;
+    const sqlQuery = `INSERT INTO client (first_name, middle_name, last_name, date_of_birth, sex, contact_number, area_id)
+                      VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const result = await session
       .sql(sqlQuery)
       .bind(
@@ -28,7 +38,8 @@ class Client {
         client.last_name,
         client.date_of_birth,
         client.sex,
-        client.contact_number
+        client.contact_number,
+        client.area_id
       )
       .execute();
 

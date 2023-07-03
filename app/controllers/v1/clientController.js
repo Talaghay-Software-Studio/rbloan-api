@@ -2,17 +2,18 @@ const Client = require("../../models/client");
 
 const clientController = {
   createClient: (req, res) => {
-    const { first_name, middle_name, last_name, date_of_birth, sex, contact_number} =
+    const { first_name, middle_name, last_name, date_of_birth, sex, contact_number, area_id } =
       req.body;
 
     const newClient = new Client(
       null,
-      first_name, 
-      middle_name, 
-      last_name, 
-      date_of_birth, 
-      sex, 
-      contact_number
+      first_name,
+      middle_name,
+      last_name,
+      date_of_birth,
+      sex,
+      contact_number,
+      area_id
     );
 
     Client.createClient(newClient)

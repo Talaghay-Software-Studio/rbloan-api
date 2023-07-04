@@ -11,12 +11,14 @@ class Collector {
   }
 
   static async createCollector(collector) {
+    console.log("Collector object:", collector); // Log the collector object
+    
     const session = await getConnection();
-
+  
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
-
+  
     const sqlQuery = `INSERT INTO collector (area_id, first_name, middle_name, last_name, contact_number)
                       VALUES (?, ?, ?, ?, ?)`;
     const result = await session
@@ -29,7 +31,7 @@ class Collector {
         collector.contact_number
       )
       .execute();
-
+  
     return result.getAutoIncrementValue();
   }
 

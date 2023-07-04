@@ -4,7 +4,7 @@ const collectorController = {
   createCollector: (req, res) => {
     const { area_id, first_name, middle_name, last_name, contact_number } = req.body;
 
-    const newCollector = new Collector(area_id, first_name, middle_name, last_name, contact_number );
+    const newCollector = new Collector(null, area_id, first_name, middle_name, last_name, contact_number );
 
     Collector.createCollector(newCollector)
       .then((collectorId) => {

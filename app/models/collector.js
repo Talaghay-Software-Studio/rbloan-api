@@ -24,6 +24,7 @@ class Collector {
     const result = await session
       .sql(sqlQuery)
       .bind(
+        collector.id,
         collector.area_id,
         collector.first_name,
         collector.middle_name,

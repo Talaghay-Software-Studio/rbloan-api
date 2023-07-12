@@ -15,14 +15,21 @@ class ClientBusiness {
       this.contact_number = contact_number;
     }
   
-    static async createClientBusiness(clientBusiness) {
-  
+    static async createClientBusiness(clientBusiness, userId) {
       const session = await getConnection();
-  
+    
       if (!session) {
         throw new Error("Failed to establish a database session");
       }
-  
+    
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                               VALUES (?, ?)`;
+    
+      await session
+        .sql(auditTrailQuery)
+        .bind(userId, 19) // Set the user_id from req.body and action_type to 19
+        .execute();
+    
       const sqlQuery = `INSERT INTO client_business (client_id, business_name, years, capital, stock, kind_of_business, daily_income, monthly, address, contact_number)
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
       const result = await session
@@ -40,65 +47,86 @@ class ClientBusiness {
           clientBusiness.contact_number
         )
         .execute();
-  
+    
       await session.close();
       return result.getAutoIncrementValue();
     }
+    
 
-    static async updateClientBusiness(updatedClientBusiness) {
-        const session = await getConnection();
+    static async updateClientBusiness(updatedClientBusiness, userId) {
+      const session = await getConnection();
     
-        if (!session) {
-          throw new Error("Failed to establish a database session");
-        }
-    
-        const sqlQuery = `UPDATE client_business
-                          SET client_id = ?,
-                              business_name = ?,
-                              years = ?,
-                              capital = ?,
-                              stock = ?,
-                              kind_of_business = ?,
-                              daily_income = ?,
-                              monthly = ?,
-                              address = ?,
-                              contact_number = ?
-                          WHERE id = ?`;
-        const result = await session
-          .sql(sqlQuery)
-          .bind(
-            updatedClientBusiness.client_id,
-            updatedClientBusiness.business_name,
-            updatedClientBusiness.years,
-            updatedClientBusiness.capital,
-            updatedClientBusiness.stock,
-            updatedClientBusiness.kind_of_business,
-            updatedClientBusiness.daily_income,
-            updatedClientBusiness.monthly,
-            updatedClientBusiness.address,
-            updatedClientBusiness.contact_number,
-            updatedClientBusiness.id
-          )
-          .execute();
-    
-        return result.getAffectedItemsCount() > 0;
+      if (!session) {
+        throw new Error("Failed to establish a database session");
       }
+    
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                               VALUES (?, ?)`;
+    
+      await session
+        .sql(auditTrailQuery)
+        .bind(userId, 20) // Set the user_id from req.body and action_type to 20
+        .execute();
+    
+      const sqlQuery = `UPDATE client_business
+                        SET client_id = ?,
+                            business_name = ?,
+                            years = ?,
+                            capital = ?,
+                            stock = ?,
+                            kind_of_business = ?,
+                            daily_income = ?,
+                            monthly = ?,
+                            address = ?,
+                            contact_number = ?
+                        WHERE id = ?`;
+      const result = await session
+        .sql(sqlQuery)
+        .bind(
+          updatedClientBusiness.client_id,
+          updatedClientBusiness.business_name,
+          updatedClientBusiness.years,
+          updatedClientBusiness.capital,
+          updatedClientBusiness.stock,
+          updatedClientBusiness.kind_of_business,
+          updatedClientBusiness.daily_income,
+          updatedClientBusiness.monthly,
+          updatedClientBusiness.address,
+          updatedClientBusiness.contact_number,
+          updatedClientBusiness.id
+        )
+        .execute();
+    
+      await session.close();
+      return result.getAffectedItemsCount() > 0;
+    }
+    
 
-      static async deleteClientBusiness(clientBusinessId) {
-        const session = await getConnection();
+    static async deleteClientBusiness(clientBusinessId, userId) {
+      const session = await getConnection();
     
-        if (!session) {
-          throw new Error("Failed to establish a database session");
-        }
-    
-        const sqlQuery = `DELETE FROM client_business WHERE id = ?`;
-        const result = await session
-          .sql(sqlQuery)
-          .bind(clientBusinessId)
-          .execute();
-    
-        return result.getAffectedItemsCount() > 0;
+      if (!session) {
+        throw new Error("Failed to establish a database session");
       }
+    
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                               VALUES (?, ?)`;
+    
+      await session
+        .sql(auditTrailQuery)
+        .bind(userId, 21) // Set the user_id from req.body and action_type to 21
+        .execute();
+    
+      const sqlQuery = `DELETE FROM client_business WHERE id = ?`;
+      const result = await session
+        .sql(sqlQuery)
+        .bind(clientBusinessId)
+        .execute();
+    
+      await session.close();
+      return result.getAffectedItemsCount() > 0;
+    }
+    
   }
   
 

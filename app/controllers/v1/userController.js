@@ -68,7 +68,7 @@ const userController = {
   },
   
   getUser: (req, res) => {
-    const userId = parseInt(req.query.id);
+    const userId = parseInt(req.body.id);
   
     User.getUserById(userId, req.body.user_id) // Pass user_id from req.body
       .then((user) => {
@@ -85,7 +85,7 @@ const userController = {
   
 
   updateUser: (req, res) => {
-    const userId = parseInt(req.query.id);
+    const userId = parseInt(req.body.id);
     const { username, password, salt, loginType, firstName, lastName, email } =
       req.body;
   
@@ -115,7 +115,7 @@ const userController = {
   
 
   deleteUser: (req, res) => {
-    const userId = parseInt(req.query.id);
+    const userId = parseInt(req.body.id);
   
     User.deleteUser(userId, req.body.user_id) // Pass user_id from req.body
       .then((success) => {

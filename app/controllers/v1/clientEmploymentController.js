@@ -15,20 +15,18 @@ const clientEmploymentController = {
         head 
       );
   
-      ClientEmployment.createClientEmployment(newClientEmployment)
-        .then((clientEmploymentId) => {
-          res
-            .status(201)
-            .json({ id: clientEmploymentId, message: "Client Employment created successfully" });
-        })
-        .catch((err) => {
+      ClientEmployment.createClientEmployment(newClientEmployment, req.body.user_id) // Pass user_id from req.body
+      .then((clientId) => {
+        res.status(201).json({ id: clientId, message: "Client created successfully" });
+      })
+      .catch((err) => {
           console.log(err); // Add this line to print the error.
           res.status(500).json({ error: "Failed to create client Employment" });
         });
     },  
 
     updateClientEmployment: (req, res) => {
-        const clientEmploymentId = parseInt(req.query.id);
+        const clientEmploymentId = parseInt(req.body.employment_id);
         const { client_id, company_name, income, status, years, address, contact_number, head } = req.body;
       
         const updatedClientEmployment = new ClientEmployment(
@@ -43,7 +41,7 @@ const clientEmploymentController = {
         head 
         );
       
-        ClientEmployment.updateClientEmployment(updatedClientEmployment)
+        ClientEmployment.updateClientEmployment(updatedClientEmployment, req.body.user_id) // Pass user_id from req.body)
           .then((success) => {
             console.log("Update Success:", success);
             if (success) {
@@ -60,9 +58,9 @@ const clientEmploymentController = {
       
       
       deleteClientEmployment: (req, res) => {
-        const clientEmploymentId = parseInt(req.query.id);
+        const clientEmploymentId = parseInt(req.body.employment_id);
     
-        ClientEmployment.deleteClientEmployment(clientEmploymentId)
+        ClientEmployment.deleteClientEmployment(clientEmploymentId, req.body.user_id)
           .then((success) => {
             if (success) {
               res.json({ message: "Client Employment deleted successfully" });

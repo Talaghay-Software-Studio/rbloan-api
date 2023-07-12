@@ -21,13 +21,21 @@ class Client {
     this.area_id = area_id;
   }
 
-  static async createClient(client) {
+  static async createClient(client, user_id) {
     const session = await getConnection();
-
+  
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
-
+  
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                             VALUES (?, ?)`;
+  
+    await session
+      .sql(auditTrailQuery)
+      .bind(user_id, 11) // Set the user_id from req.body and action_type to 11
+      .execute();
+  
     const sqlQuery = `INSERT INTO client (first_name, middle_name, last_name, date_of_birth, sex, contact_number, area_id)
                       VALUES (?, ?, ?, ?, ?, ?, ?)`;
     const result = await session
@@ -42,11 +50,12 @@ class Client {
         client.area_id
       )
       .execute();
-
+  
     return result.getAutoIncrementValue();
   }
+  
 
-  static async getAllClient() {
+  static async getAllClient(user_id) {
     try {
       const session = await getConnection();
   
@@ -54,6 +63,14 @@ class Client {
         console.log("Failed to establish a database session");
         throw new Error("Failed to establish a database session");
       }
+  
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                               VALUES (?, ?)`;
+  
+      await session
+        .sql(auditTrailQuery)
+        .bind(user_id, 12) // Set the user_id from req.body and action_type to 12
+        .execute();
   
       const sqlQuery = `
         SELECT c.id, c.first_name, c.middle_name, c.last_name, ca.province, ca.city
@@ -71,8 +88,8 @@ class Client {
         client_id: client[0],
         full_name: `${client[1]} ${client[2]} ${client[3]}`,
         address: `${client[5]} ${client[4]}`,
-        total_loan: 200000.00,
-        remaining_balance: 300000.00,
+        total_loan: 200000.0,
+        remaining_balance: 300000.0,
         is_delinquent: "No",
       }));
   
@@ -85,7 +102,8 @@ class Client {
   
   
   
-  static async getClientById(clientId) {
+  
+  static async getClientById(clientId, user_id) {
     try {
       const session = await getConnection();
   
@@ -93,6 +111,14 @@ class Client {
         console.log("Failed to establish a database session");
         throw new Error("Failed to establish a database session");
       }
+  
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                               VALUES (?, ?)`;
+  
+      await session
+        .sql(auditTrailQuery)
+        .bind(user_id, 13) // Set the user_id from req.body and action_type to 13
+        .execute();
   
       const sqlQuery = `
         SELECT 
@@ -161,13 +187,22 @@ class Client {
   }
   
   
-  static async updateClient(client) {
+  
+  static async updateClient(client, user_id) {
     const session = await getConnection();
-
+  
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
-
+  
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                             VALUES (?, ?)`;
+  
+    await session
+      .sql(auditTrailQuery)
+      .bind(user_id, 14) // Set the user_id from req.body and action_type to 14
+      .execute();
+  
     const sqlQuery = `UPDATE client SET first_name = ?, middle_name = ?, last_name = ?, date_of_birth = ?, sex = ?, contact_number = ? WHERE id = ?`;
     const result = await session
       .sql(sqlQuery)
@@ -181,22 +216,32 @@ class Client {
         client.id
       )
       .execute();
-
+  
     return result.getAffectedItemsCount() > 0;
   }
+  
 
-  static async deleteClient(clientId) {
+  static async deleteClient(clientId, user_id) {
     const session = await getConnection();
-
+  
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
-
+  
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                             VALUES (?, ?)`;
+  
+    await session
+      .sql(auditTrailQuery)
+      .bind(user_id, 15) // Set the user_id from req.body and action_type to 15
+      .execute();
+  
     const sqlQuery = `DELETE FROM client WHERE id = ?`;
     const result = await session.sql(sqlQuery).bind(clientId).execute();
-
+  
     return result.getAffectedItemsCount() > 0;
   }
+  
 
   static async getClientsByQuery(query, searchby) {
     try {

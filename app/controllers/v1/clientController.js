@@ -4,7 +4,7 @@ const clientController = {
   createClient: (req, res) => {
     const { first_name, middle_name, last_name, date_of_birth, sex, contact_number, area_id } =
       req.body;
-
+  
     const newClient = new Client(
       null,
       first_name,
@@ -15,21 +15,20 @@ const clientController = {
       contact_number,
       area_id
     );
-
-    Client.createClient(newClient)
+  
+    Client.createClient(newClient, req.body.user_id) // Pass user_id from req.body
       .then((clientId) => {
-        res
-          .status(201)
-          .json({ id: clientId, message: "Client created successfully" });
+        res.status(201).json({ id: clientId, message: "Client created successfully" });
       })
       .catch((err) => {
         console.log(err); // Add this line to print the error.
         res.status(500).json({ error: "Failed to create client" });
       });
   },
+  
 
   getAllClient: (req, res) => {
-    Client.getAllClient()
+    Client.getAllClient(req.body.user_id) // Pass user_id from req.body
       .then((clients) => {
         res.json(clients);
       })
@@ -37,11 +36,12 @@ const clientController = {
         res.status(500).json({ error: "Failed to retrieve client" });
       });
   },
+  
 
   getClient: (req, res) => {
-    const clientId = parseInt(req.query.id);
+    const clientId = parseInt(req.body.client_id);
   
-    Client.getClientById(clientId)
+    Client.getClientById(clientId, req.body.user_id) // Pass user_id from req.body
       .then((client) => {
         if (client) {
           res.json(client);
@@ -53,23 +53,23 @@ const clientController = {
         res.status(500).json({ error: "Failed to retrieve client" });
       });
   },
-
+  
   updateClient: (req, res) => {
-    const clientId = parseInt(req.query.id);
+    const clientId = parseInt(req.body.client_id);
     const { first_name, middle_name, last_name, date_of_birth, sex, contact_number } =
       req.body;
-
+  
     const updatedClient = new Client(
       clientId,
-      first_name, 
-      middle_name, 
-      last_name, 
-      date_of_birth, 
-      sex, 
+      first_name,
+      middle_name,
+      last_name,
+      date_of_birth,
+      sex,
       contact_number
     );
-
-    Client.updateClient(updatedClient)
+  
+    Client.updateClient(updatedClient, req.body.user_id) // Pass user_id from req.body
       .then((success) => {
         if (success) {
           res.json({ message: "Client updated successfully" });
@@ -81,11 +81,12 @@ const clientController = {
         res.status(500).json({ error: "Failed to update client" });
       });
   },
+  
 
   deleteClient: (req, res) => {
-    const clientId = parseInt(req.query.id);
-
-    Client.deleteClient(clientId)
+    const clientId = parseInt(req.body.client_id);
+  
+    Client.deleteClient(clientId, req.body.user_id) // Pass user_id from req.body
       .then((success) => {
         if (success) {
           res.json({ message: "Client deleted successfully" });
@@ -97,6 +98,7 @@ const clientController = {
         res.status(500).json({ error: "Failed to delete client" });
       });
   },
+  
 
   getClientByNameOrAddress: (req, res) => {
     const { query, searchby } = req.query;

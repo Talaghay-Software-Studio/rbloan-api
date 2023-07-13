@@ -15,7 +15,7 @@ const clientSpouseController = {
         contact_number
       );
   
-      ClientSpouse.createClientSpouse(newClientSpouse)
+      ClientSpouse.createClientSpouse(newClientSpouse, req.body.user_id)
         .then((clientSpouseId) => {
           res
             .status(201)
@@ -28,7 +28,7 @@ const clientSpouseController = {
     },  
 
     updateClientSpouse: (req, res) => {
-        const clientSpouseId = parseInt(req.query.id);
+        const clientSpouseId = parseInt(req.body.spouse_id);
         const { client_id, first_name, middle_name, last_name, date_of_birth, contact_number } = req.body;
       
         const updatedClientSpouse = new ClientSpouse(
@@ -41,7 +41,7 @@ const clientSpouseController = {
         contact_number
         );
       
-        ClientSpouse.updateClientSpouse(updatedClientSpouse)
+        ClientSpouse.updateClientSpouse(updatedClientSpouse, req.body.user_id)
           .then((success) => {
             console.log("Update Success:", success);
             if (success) {
@@ -58,9 +58,9 @@ const clientSpouseController = {
       
       
       deleteClientSpouse: (req, res) => {
-        const clientSpouseId = parseInt(req.query.id);
+        const clientSpouseId = parseInt(req.body.spouse_id);
     
-        ClientSpouse.deleteClientSpouse(clientSpouseId)
+        ClientSpouse.deleteClientSpouse(clientSpouseId, req.body.user_id)
           .then((success) => {
             if (success) {
               res.json({ message: "Client Spouse deleted successfully" });

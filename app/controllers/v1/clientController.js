@@ -96,6 +96,29 @@ const clientController = {
         res.status(500).json({ error: "Failed to delete client" });
       });
   },
+
+  getClientByNameOrAddress: (req, res) => {
+    const { query, searchby } = req.query;
+  
+    const validSearchByValues = ["client", "address", "area", "collector"];
+  
+    if (!validSearchByValues.includes(searchby)) {
+      return res.status(400).json({ error: "Invalid search value. client, address, area, collector are only accepted" });
+    }
+  
+    Client.getClientsByQuery(query, searchby)
+      .then((clients) => {
+        if (clients.length) {
+          res.json(clients);
+        } else {
+          res.status(404).json({ error: "No data found" });
+        }
+      })
+      .catch((err) => {
+        res.status(500).json({ error: "Failed to retrieve data" });
+      });
+  },  
+  
 };
 
 module.exports = clientController;

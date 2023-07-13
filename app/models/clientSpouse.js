@@ -11,13 +11,21 @@ class ClientSpouse {
       this.contact_number = contact_number;
     }
   
-    static async createClientSpouse(clientSpouse) {
+    static async createClientSpouse(clientSpouse, userId) {
   
       const session = await getConnection();
   
       if (!session) {
         throw new Error("Failed to establish a database session");
       }
+
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+      VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 34) // Set the user_id from req.body and action_type to 34
+.execute();
   
       const sqlQuery = `INSERT INTO client_spouse (client_id, first_name, middle_name, last_name, date_of_birth, contact_number)
                         VALUES (?, ?, ?, ?, ?, ?)`;
@@ -37,12 +45,20 @@ class ClientSpouse {
       return result.getAutoIncrementValue();
     }
 
-    static async updateClientSpouse(updatedClientSpouse) {
+    static async updateClientSpouse(updatedClientSpouse,userId) {
         const session = await getConnection();
       
         if (!session) {
           throw new Error("Failed to establish a database session");
         }
+
+        const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+      VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 35) // Set the user_id from req.body and action_type to 34
+.execute();
       
         const sqlQuery = `UPDATE client_spouse
                           SET client_id = ?,
@@ -76,12 +92,20 @@ class ClientSpouse {
         
       
       
-      static async deleteClientSpouse(clientSpouseId) {
+      static async deleteClientSpouse(clientSpouseId, userId) {
         const session = await getConnection();
     
         if (!session) {
           throw new Error("Failed to establish a database session");
         }
+
+        const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+      VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 36) // Set the user_id from req.body and action_type to 34
+.execute();
     
         const sqlQuery = `DELETE FROM client_spouse WHERE id = ?`;
         const result = await session

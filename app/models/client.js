@@ -243,7 +243,7 @@ class Client {
   }
   
 
-  static async getClientsByQuery(query, searchby) {
+  static async getClientsByQuery(query, searchby, userId) {
     try {
       const session = await getConnection();
   
@@ -251,6 +251,13 @@ class Client {
         console.log("Failed to establish a database session");
         throw new Error("Failed to establish a database session");
       }
+      const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+      VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 37) // Set the user_id from req.body and action_type to 34
+.execute();
   
       let sqlQuery = `
         SELECT *

@@ -14,7 +14,7 @@ const clientReferenceController = {
         contact_number
       );
   
-      ClientReference.createClientReference(newClientReference)
+      ClientReference.createClientReference(newClientReference, req.body.user_id )
         .then((clientReferenceId) => {
           res
             .status(201)
@@ -27,7 +27,7 @@ const clientReferenceController = {
     },  
 
     updateClientReference: (req, res) => {
-        const clientReferenceId = parseInt(req.query.id);
+        const clientReferenceId = parseInt(req.body.reference_id);
         const { client_id, first_name, middle_name, last_name, contact_number } = req.body;
       
         const updatedClientReference = new ClientReference(
@@ -39,7 +39,7 @@ const clientReferenceController = {
         contact_number
         );
       
-        ClientReference.updateClientReference(updatedClientReference)
+        ClientReference.updateClientReference(updatedClientReference, req.body.user_id)
           .then((success) => {
             console.log("Update Success:", success);
             if (success) {
@@ -56,9 +56,9 @@ const clientReferenceController = {
       
       
       deleteClientReference: (req, res) => {
-        const clientReferenceId = parseInt(req.query.id);
+        const clientReferenceId = parseInt(req.body.reference_id);
     
-        ClientReference.deleteClientReference(clientReferenceId)
+        ClientReference.deleteClientReference(clientReferenceId, req.body.user_id)
           .then((success) => {
             if (success) {
               res.json({ message: "Client Reference deleted successfully" });

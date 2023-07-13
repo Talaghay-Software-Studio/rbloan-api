@@ -41,7 +41,7 @@ const branchController = {
   
 
   getBranch: (req, res) => {
-    const branchId = parseInt(req.query.id);
+    const branchId = parseInt(req.body.branch_id);
   
     Branch.getBranchById(branchId, req.body.user_id) // Pass user_id from req.body
       .then((branch) => {
@@ -58,7 +58,7 @@ const branchController = {
   
 
   updateBranch: (req, res) => {
-    const branchId = parseInt(req.query.id);
+    const branchId = parseInt(req.body.branch_id);
     const { name, address_line1, address_line2, city, province, postal_code, country } =
       req.body;
   
@@ -88,7 +88,7 @@ const branchController = {
   
 
   deleteBranch: (req, res) => {
-    const branchId = parseInt(req.query.id);
+    const branchId = parseInt(req.body.branch_id);
   
     Branch.deleteBranch(branchId, req.body.user_id) // Pass user_id from req.body
       .then((success) => {

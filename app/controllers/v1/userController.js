@@ -1,4 +1,5 @@
 const User = require("../../models/user");
+const { getConnection } = require("../../db");
 
 const userController = {
   createUser: (req, res) => {
@@ -18,18 +19,46 @@ const userController = {
 
     User.createUser(newUser)
       .then((userId) => {
-        res
-          .status(201)
-          .json({ id: userId, message: "User created successfully" });
+        // Write to audit_trail table
+        const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+                                 VALUES (?, ?)`;
+
+        getConnection()
+          .then((session) => {
+            if (!session) {
+              throw new Error("Failed to establish a database session");
+            }
+
+            session
+              .sql(auditTrailQuery)
+              .bind(userId, 1) // Set the user_id from req.body and action_type to 1
+              .execute()
+              .then(() => {
+                res
+                  .status(201)
+                  .json({ id: userId, message: "User created successfully" });
+              })
+              .catch((err) => {
+                console.log(err);
+                res.status(500).json({ error: "Failed to create user" });
+              })
+              .finally(() => {
+                session.close();
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).json({ error: "Failed to create user" });
+          });
       })
       .catch((err) => {
-        console.log(err); // Add this line to print the error.
+        console.log(err);
         res.status(500).json({ error: "Failed to create user" });
       });
   },
 
   getAllUsers: (req, res) => {
-    User.getAllUsers()
+    User.getAllUsers(req.body.user_id) // Pass user_id from req.body
       .then((users) => {
         res.json(users);
       })
@@ -37,11 +66,11 @@ const userController = {
         res.status(500).json({ error: "Failed to retrieve users" });
       });
   },
-
+  
   getUser: (req, res) => {
     const userId = parseInt(req.query.id);
   
-    User.getUserById(userId)
+    User.getUserById(userId, req.body.user_id) // Pass user_id from req.body
       .then((user) => {
         if (user) {
           res.json(user);
@@ -53,12 +82,13 @@ const userController = {
         res.status(500).json({ error: "Failed to retrieve user" });
       });
   },
+  
 
   updateUser: (req, res) => {
     const userId = parseInt(req.query.id);
     const { username, password, salt, loginType, firstName, lastName, email } =
       req.body;
-
+  
     const updatedUser = new User(
       userId,
       username,
@@ -69,8 +99,8 @@ const userController = {
       lastName,
       email
     );
-
-    User.updateUser(updatedUser)
+  
+    User.updateUser(updatedUser, req.body.user_id) // Pass user_id from req.body
       .then((success) => {
         if (success) {
           res.json({ message: "User updated successfully" });
@@ -82,11 +112,12 @@ const userController = {
         res.status(500).json({ error: "Failed to update user" });
       });
   },
+  
 
   deleteUser: (req, res) => {
     const userId = parseInt(req.query.id);
-
-    User.deleteUser(userId)
+  
+    User.deleteUser(userId, req.body.user_id) // Pass user_id from req.body
       .then((success) => {
         if (success) {
           res.json({ message: "User deleted successfully" });
@@ -98,6 +129,7 @@ const userController = {
         res.status(500).json({ error: "Failed to delete user" });
       });
   },
+  
 };
 
 module.exports = userController;

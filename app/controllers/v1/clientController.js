@@ -109,7 +109,7 @@ const clientController = {
       return res.status(400).json({ error: "Invalid search value. client, address, area, collector are only accepted" });
     }
   
-    Client.getClientsByQuery(query, searchby)
+    Client.getClientsByQuery(query, searchby, req.body.user_id)
       .then((clients) => {
         if (clients.length) {
           res.json(clients);

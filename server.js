@@ -33,6 +33,7 @@ const clientReferenceRoutes = require("./app/routes/v1/clientReferenceRoutes");
 const clientSpouseRoutes = require("./app/routes/v1/clientSpouseRoutes");
 const areaRoutes = require("./app/routes/v1/areaRoutes");
 const collectorRoutes = require("./app/routes/v1/collectorRoutes");
+const transactionRoutes = require("./app/routes/v1/transactionRoutes.js");
 
 
 app.use("/api/v1/users", userRoutes);
@@ -47,6 +48,7 @@ app.use("/api/v1/client/reference", clientReferenceRoutes);
 app.use("/api/v1/client/spouse", clientSpouseRoutes);
 app.use("/api/v1/area", areaRoutes);
 app.use("/api/v1/collector", collectorRoutes);
+app.use("/api/v1/transaction", transactionRoutes);
 
 
 

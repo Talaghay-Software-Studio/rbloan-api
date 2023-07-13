@@ -6,7 +6,7 @@ const collectorController = {
 
     const newCollector = new Collector(null, area_id, first_name, middle_name, last_name, contact_number );
 
-    Collector.createCollector(newCollector)
+    Collector.createCollector(newCollector, req.body.user_id)
       .then((collectorId) => {
         res
           .status(201)
@@ -19,7 +19,7 @@ const collectorController = {
   },
 
   getAllCollector: (req, res) => {
-    Collector.getAllCollector()
+    Collector.getAllCollector(req.body.user_id)
       .then((collector) => {
         res.json(collector);
       })
@@ -29,9 +29,9 @@ const collectorController = {
   },
 
   getCollector: (req, res) => {
-    const collectorId = parseInt(req.query.id);
+    const collectorId = parseInt(req.body.collector_id);
 
-    Collector.getCollectorById(collectorId)
+    Collector.getCollectorById(collectorId, req.body.user_id)
       .then((collector) => {
         if (collector) {
           res.json(collector);
@@ -45,7 +45,7 @@ const collectorController = {
   },
 
   updateCollector: (req, res) => {
-    const collectorId = parseInt(req.query.id);
+    const collectorId = parseInt(req.body.collector_id);
     const { area_id, first_name, middle_name, last_name, contact_number } = req.body;
 
     const updatedCollector = new Collector(
@@ -59,7 +59,7 @@ const collectorController = {
 
     console.log("Updating Collector:", updatedCollector);
 
-    Collector.updateCollector(updatedCollector)
+    Collector.updateCollector(updatedCollector, req.body.user_id)
       .then((success) => {
         if (success) {
           console.log("Collector updated successfully");
@@ -76,11 +76,11 @@ const collectorController = {
   },
 
   deleteCollector: (req, res) => {
-    const collectorId = parseInt(req.query.id);
+    const collectorId = parseInt(req.body.collector_id);
   
     console.log("Received delete request for area with ID:", collectorId);
   
-    Collector.deleteCollector(collectorId)
+    Collector.deleteCollector(collectorId, req.body.user_id)
       .then((success) => {
         if (success) {
           console.log("Collector deleted successfully");

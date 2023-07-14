@@ -6,7 +6,7 @@ const transactionController = {
 
     const newTransaction = new Transaction(null, transaction_type_id, amount, collector_id, client_id );
 
-    Transaction.createTransaction(newTransaction)
+    Transaction.createTransaction(newTransaction, req.body.user_id)
       .then((transactionId) => {
         res
           .status(201)
@@ -19,7 +19,7 @@ const transactionController = {
   },
 
   getAllTransaction: (req, res) => {
-    Transaction.getAllTransaction()
+    Transaction.getAllTransaction(req.body.user_id)
       .then((transaction) => {
         res.json(transaction);
       })
@@ -29,9 +29,9 @@ const transactionController = {
   },
 
   getTransaction: (req, res) => {
-    const transactionId = parseInt(req.query.id);
+    const transactionId = parseInt(req.body.transaction_id);
 
-    Transaction.getTransactionById(transactionId)
+    Transaction.getTransactionById(transactionId, req.body.user_id)
       .then((transaction) => {
         if (transaction) {
           res.json(transaction);
@@ -45,7 +45,7 @@ const transactionController = {
   },
 
   updateTransaction: (req, res) => {
-    const transactionId = parseInt(req.query.id);
+    const transactionId = parseInt(req.body.transaction_id);
     const { transaction_type_id, amount, collector_id, client_id } = req.body;
 
     const updatedTransaction = new Transaction(
@@ -58,7 +58,7 @@ const transactionController = {
 
     console.log("Updating Transaction:", updatedTransaction);
 
-    Transaction.updateTransaction(updatedTransaction)
+    Transaction.updateTransaction(updatedTransaction, req.body.user_id)
       .then((success) => {
         if (success) {
           console.log("Transaction updated successfully");
@@ -75,11 +75,11 @@ const transactionController = {
   },
 
   deleteTransaction: (req, res) => {
-    const transactionId = parseInt(req.query.id);
+    const transactionId = parseInt(req.body.transaction_id);
   
     console.log("Received delete request for transaction with ID:", transactionId);
   
-    Transaction.deleteTransaction(transactionId)
+    Transaction.deleteTransaction(transactionId,req.body.user_id)
       .then((success) => {
         if (success) {
           console.log("Transaction deleted successfully");

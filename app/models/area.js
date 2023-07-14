@@ -10,12 +10,20 @@ class Area {
     this.radius = radius;
   }
 
-  static async createArea(area) {
+  static async createArea(area, userId) {
     const session = await getConnection();
 
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 38) // Set the user_id from req.body and action_type to 34
+.execute();
 
     const sqlQuery = `INSERT INTO area (branch_id, name, latitude, longitude, radius)
                       VALUES (?, ?, ?, ?, ?)`;
@@ -33,12 +41,20 @@ class Area {
     return result.getAutoIncrementValue();
   }
 
-  static async getAllAreas() {
+  static async getAllAreas(userId) {
     const session = await getConnection();
 
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 39) // Set the user_id from req.body and action_type to 34
+.execute();
 
     const sqlQuery = "SELECT * FROM area";
     const result = await session.sql(sqlQuery).execute();
@@ -54,12 +70,20 @@ class Area {
     }));
   }
 
-  static async getAreaById(areaId) {
+  static async getAreaById(areaId,userId) {
     const session = await getConnection();
 
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 40) // Set the user_id from req.body and action_type to 34
+.execute();
 
     const sqlQuery = `SELECT * FROM area WHERE id = ?`;
     const result = await session.sql(sqlQuery).bind(areaId).execute();
@@ -75,12 +99,20 @@ class Area {
       }));
   }
 
-  static async updateArea(area) {
+  static async updateArea(area, userId) {
     const session = await getConnection();
 
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 41) // Set the user_id from req.body and action_type to 34
+.execute();
 
     console.log("Executing update query:", area);
 
@@ -101,7 +133,7 @@ class Area {
     return result.getAffectedItemsCount() > 0;
   }
 
-  static async deleteArea(areaId) {
+  static async deleteArea(areaId, userId) {
     const session = await getConnection();
   
     if (!session) {
@@ -109,6 +141,14 @@ class Area {
     }
   
     console.log("Deleting area with ID:", areaId);
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 42) // Set the user_id from req.body and action_type to 34
+.execute();
   
     const sqlQuery = `DELETE FROM area WHERE id = ?`;
     const result = await session.sql(sqlQuery).bind(areaId).execute();

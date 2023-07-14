@@ -10,7 +10,7 @@ class Collector {
     this.contact_number = contact_number;
   }
 
-  static async createCollector(collector) {
+  static async createCollector(collector, userId) {
     console.log("Collector object:", collector); // Log the collector object
     
     const session = await getConnection();
@@ -18,13 +18,21 @@ class Collector {
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 43) 
+.execute();
   
     const sqlQuery = `INSERT INTO collector (area_id, first_name, middle_name, last_name, contact_number)
                       VALUES (?, ?, ?, ?, ?)`;
     const result = await session
       .sql(sqlQuery)
       .bind(
-        collector.id,
+
         collector.area_id,
         collector.first_name,
         collector.middle_name,
@@ -36,12 +44,20 @@ class Collector {
     return result.getAutoIncrementValue();
   }
 
-  static async getAllCollector() {
+  static async getAllCollector(userId) {
     const session = await getConnection();
 
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 44) 
+.execute();
 
     const sqlQuery = "SELECT * FROM collector";
     const result = await session.sql(sqlQuery).execute();
@@ -57,12 +73,19 @@ class Collector {
     }));
   }
 
-  static async getCollectorById(collectorId) {
+  static async getCollectorById(collectorId,userId) {
     const session = await getConnection();
 
     if (!session) {
       throw new Error("Failed to establish a database session");
     }
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 45) 
+.execute();
 
     const sqlQuery = `SELECT * FROM collector WHERE id = ?`;
     const result = await session.sql(sqlQuery).bind(collectorId).execute();
@@ -78,7 +101,7 @@ class Collector {
       }));
   }
 
-  static async updateCollector(collector) {
+  static async updateCollector(collector, userId) {
     const session = await getConnection();
 
     if (!session) {
@@ -86,6 +109,14 @@ class Collector {
     }
 
     console.log("Executing update query:", collector);
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 46) 
+.execute();
 
     const sqlQuery = `UPDATE collector SET area_id = ?, first_name = ?, middle_name = ?, last_name = ?, contact_number = ? WHERE id = ?`;
     const result = await session
@@ -104,7 +135,7 @@ class Collector {
     return result.getAffectedItemsCount() > 0;
   }
 
-  static async deleteCollector(collectorId) {
+  static async deleteCollector(collectorId, userId) {
     const session = await getConnection();
   
     if (!session) {
@@ -112,6 +143,14 @@ class Collector {
     }
   
     console.log("Deleting collector with ID:", collectorId);
+
+    const auditTrailQuery = `INSERT INTO audit_trail (user_id, action_type)
+    VALUES (?, ?)`;
+
+await session
+.sql(auditTrailQuery)
+.bind(userId, 47) 
+.execute();
   
     const sqlQuery = `DELETE FROM collector WHERE id = ?`;
     const result = await session.sql(sqlQuery).bind(collectorId).execute();

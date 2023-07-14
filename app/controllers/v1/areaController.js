@@ -4,9 +4,9 @@ const areaController = {
   createArea: (req, res) => {
     const { branch_id, name, latitude, longitude, radius } = req.body;
 
-    const newArea = new Area(branch_id, name, latitude, longitude, radius);
+    const newArea = new Area(null, branch_id, name, latitude, longitude, radius);
 
-    Area.createArea(newArea)
+    Area.createArea(newArea, req.body.user_id)
       .then((areaId) => {
         res
           .status(201)
@@ -19,7 +19,7 @@ const areaController = {
   },
 
   getAllArea: (req, res) => {
-    Area.getAllAreas()
+    Area.getAllAreas(req.body.user_id)
       .then((areas) => {
         res.json(areas);
       })
@@ -29,9 +29,9 @@ const areaController = {
   },
 
   getArea: (req, res) => {
-    const areaId = parseInt(req.query.id);
+    const areaId = parseInt(req.body.area_id);
 
-    Area.getAreaById(areaId)
+    Area.getAreaById(areaId, req.body.user_id)
       .then((area) => {
         if (area) {
           res.json(area);
@@ -45,7 +45,7 @@ const areaController = {
   },
 
   updateArea: (req, res) => {
-    const areaId = parseInt(req.query.id);
+    const areaId = parseInt(req.body.area_id);
     const { branch_id, name, latitude, longitude, radius } = req.body;
 
     const updatedArea = new Area(
@@ -59,7 +59,7 @@ const areaController = {
 
     console.log("Updating Area:", updatedArea);
 
-    Area.updateArea(updatedArea)
+    Area.updateArea(updatedArea, req.body.user_id)
       .then((success) => {
         if (success) {
           console.log("Area updated successfully");
@@ -76,11 +76,11 @@ const areaController = {
   },
 
   deleteArea: (req, res) => {
-    const areaId = parseInt(req.query.id);
+    const areaId = parseInt(req.body.area_id);
   
     console.log("Received delete request for area with ID:", areaId);
   
-    Area.deleteArea(areaId)
+    Area.deleteArea(areaId, req.body.user_id)
       .then((success) => {
         if (success) {
           console.log("Area deleted successfully");
